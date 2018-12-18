@@ -53,7 +53,7 @@ module.exports.findByIdAndRemove = (table, id) => {
 module.exports.findOne = (table, data, operator, projection) =>{
     let valores_concatenados = concatenador(data,"select-one", operator);
     if (!projection) {
-        return `SELECT * FROM ${table} WHERE ${valores_concatenados.select_one}'`
+        return `SELECT * FROM ${table} WHERE ${valores_concatenados.select_one}`
     }
     return `SELECT ${projection} FROM ${table} WHERE ${valores_concatenados.select_one}`
 }
@@ -111,9 +111,9 @@ function concatenador(obj, tipo, operator) {
             let outro_tipo = `${properties}= ${obj[properties]}`;
 
             if (cont < tamanho) {
-                info.select_one += (typeof obj[properties] !== 'boolean' || typeof obj[properties] !== 'number') ? `${tipo_string} ${operator} ` : `${outro_tipo} ${operator} `;
+                info.select_one += (typeof obj[properties] !== 'boolean' && typeof obj[properties] !== 'number') ? `${tipo_string} ${operator} ` : `${outro_tipo} ${operator} `;
             } else {
-                info.select_one += (typeof obj[properties] !== 'boolean' || typeof obj[properties] !== 'number') ? `${tipo_string}` : `${outro_tipo}`;
+                info.select_one += (typeof obj[properties] !== 'boolean' && typeof obj[properties] !== 'number') ? tipo_string : outro_tipo;
             }
             cont += 1
         }
