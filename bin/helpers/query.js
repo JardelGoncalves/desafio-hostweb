@@ -83,30 +83,37 @@ function concatenador(obj, tipo, operator) {
         for (let properties in obj) {
             if (cont < tamanho) {
                 info.fields += properties + "," + " ";
-                info.values += "'" + obj[properties] + "'," + " "
+                info.values += (typeof obj[properties] !== 'boolean' || typeof obj[properties] !== 'number') ? `'${obj[properties]}', ` : `${obj[properties]}, `;  
             } else {
                 info.fields += properties
-                info.values += "'" + obj[properties] + "'"
+                info.values += (typeof obj[properties] !== 'boolean' || typeof obj[properties] !== 'number') ? `'${obj[properties]}'` : `${obj[properties]}`;
             }
             cont += 1
         }
     } else if (tipo === "update") {
         // concatena os dados para usar no update
         for (let properties in obj) {
+            let tipo_string = `${properties} = '${obj[properties]}'`;
+            let outro_tipo = `${properties}= ${obj[properties]}`;
+            
             if (cont < tamanho) {
-                info.set += properties + "=" + "'" + obj[properties] + "'," + " ";
+                info.set += (typeof obj[properties] !== 'boolean' || typeof obj[properties] !== 'number') ? `${tipo_string}, ` : `${outro_tipo}, `; 
+                
             } else {
-                info.set += properties + "=" + "'" + obj[properties] + "'";
+                info.set += (typeof obj[properties] !== 'boolean' || typeof obj[properties] !== 'number') ? tipo_string : outro_tipo; 
             }
             cont += 1
         }
     } else if (tipo === "select-one"){
         // concatena para o operador passado como argumento
         for (let properties in obj) {
+            let tipo_string = `${properties} = '${obj[properties]}'`;
+            let outro_tipo = `${properties}= ${obj[properties]}`;
+
             if (cont < tamanho) {
-                info.select_one += properties + "=" + "'" + obj[properties] + "' " + operator + " ";
+                info.select_one += (typeof obj[properties] !== 'boolean' || typeof obj[properties] !== 'number') ? `${tipo_string} ${operator} ` : `${outro_tipo} ${operator} `;
             } else {
-                info.select_one += properties + "=" + "'" + obj[properties] + "'";
+                info.select_one += (typeof obj[properties] !== 'boolean' || typeof obj[properties] !== 'number') ? `${tipo_string}` : `${outro_tipo}`;
             }
             cont += 1
         }
