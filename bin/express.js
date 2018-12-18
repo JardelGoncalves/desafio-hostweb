@@ -10,5 +10,5 @@ app.use(body_parser.urlencoded({extended:true}));
 app.set("port", 3000);
 
 // Rotas API
-
+app.use("/usuario", require("../routes/usuario-routes"));
 module.exports = app;
