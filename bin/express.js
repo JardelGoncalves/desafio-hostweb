@@ -11,4 +11,6 @@ app.set("port", 3000);
 
 // Rotas API
 app.use("/usuario", require("../routes/usuario-routes"));
+app.use("/tarefa", require("../routes/tarefa-routes"));
+
 module.exports = app;
