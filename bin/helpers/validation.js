@@ -32,29 +32,34 @@ class Validation {
 
 
     dateValid(date, message) {
-        if (date.length === 17) {
-            let DataHora = data.split(" ");
-            if (DataHora.length === 2) {
-                let dataValida = this.verificaDataOuHora(DataHora[0], "/");
-                let horaValida = this.verificaDataOuHora(DataHora[1], ":");
-                if (!dataValida || !horaValida) {
+        if(date){
+            if (date.length === 17) {
+                let DataHora = date.split(" ");
+                if (DataHora.length === 2) {
+                    let dataValida = this.verificaDataOuHora(DataHora[0], "/");
+                    let horaValida = this.verificaDataOuHora(DataHora[1], ":");
+                    if (!dataValida || !horaValida) {
+                        this.erros.push(message);
+                    }
+                } else {
                     this.erros.push(message);
                 }
             } else {
                 this.erros.push(message);
-            }
+            };
         } else {
             this.erros.push(message);
-        };
+        }
     };
 
 
     verificaDataOuHora(dataOuHora, div) {
         let valida = true;
-        let vetor = dataOuHora.split(div);
-        if (vetor.length === 3) {
-            for (let i = 0; i < vetor.length; i++) {
-                if (!parseInt(vetor[i])) {
+        let vetor_par = dataOuHora.split(div);
+        if (vetor_par.length === 3) {
+            for (let i = 0; i < vetor_par.length; i++) {
+                // vetor_par = ["12", "33", "43"]
+                if (isNaN(parseInt(vetor_par[i][0])) || isNaN(parseInt(vetor_par[i][1]))) {
                     valida = false;
                     break
                 }
