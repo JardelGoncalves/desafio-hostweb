@@ -11,6 +11,22 @@ const md5 = require("md5");
  * Módulo responsável por verificar/validar as informações e acessar o banco
  */
 
+module.exports.authenticate = (Email, Password) => {
+    return new Promise((resolve, reject) => {
+        let hashPassword = md5(Password);
+        connection.query(Query.findOne("usuario", {
+            email: Email,
+            password: hashPassword
+        }, "AND", "id, nome, email"), (err, result) => {
+            if (result && result.length > 0) {
+                resolve(result);
+            } else {
+                console.log(err)
+                reject(err);
+            }
+        })
+    })
+}
 
 module.exports.register = (data) => {
     return new Promise((resolve, reject) => {

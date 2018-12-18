@@ -1,6 +1,34 @@
 "use strict"
 
 const _repository = require("../repositories/usuario-repository");
+const variables = require("../bin/config/variables");
+const jwt = require("jsonwebtoken");
+
+module.exports.authenticate = (req, res) => {
+    if (req.body.email && req.body.password) {
+        _repository.authenticate(req.body.email, req.body.password)
+            .then((usuarioEncontrado) => {
+                res.status(200).json({
+                    usuario: usuarioEncontrado,
+                    token: jwt.sign({
+                        usuario: usuarioEncontrado
+                    }, variables.Securty.secretKey)
+                })
+            })
+            .catch((err) => {
+                res.status(404).json({
+                    message: "Usuário ou senha inválido!"
+                })
+                return;
+            })
+    } else {
+        res.status(400).json({
+            message: "Não foi possivel efetuar o login"
+        })
+        return;
+    }
+}
+
 
 // Cadastro de usuário
 module.exports.register = (req, res) => {
@@ -93,7 +121,9 @@ module.exports.delete = (req, res) => {
     if (req.params.id) {
         _repository.delete(req.params.id)
             .then((success) => {
-                res.status(success.status).json({message:success.message})
+                res.status(success.status).json({
+                    message: success.message
+                })
             })
             .catch((failed) => {
                 res.status(failed.status).json({
