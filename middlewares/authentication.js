@@ -3,6 +3,8 @@
 const variables = require("../bin/config/variables");
 const Promise = require("promise");
 const jwt = require("jsonwebtoken");
+const connection = require("../bin/config/db-connection")();
+const Query = require("../bin/helpers/query");
 
 /**
  * Autenticação da API via JWT
@@ -15,7 +17,15 @@ module.exports = (req, res, next) => {
             if (token){
                 try {
                     let decoded = jwt.verify(token, variables.Securty.secretKey)
-                    resolve(decoded)
+                    connection.query(Query.findOne("usuario", decoded.usuario[0],"AND"), (err, result)=>{
+                        if(result){
+                            resolve(decoded)
+                        } else {
+                            console.log(err)
+                            reject({message:"Usuário inválido"})
+                        }
+                    })
+        
                 } catch (error) {
                     console.log(error)
                     reject({message:"Token inválido"})
