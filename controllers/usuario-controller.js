@@ -8,12 +8,18 @@ module.exports.authenticate = (req, res) => {
     if (req.body.email && req.body.password) {
         _repository.authenticate(req.body.email, req.body.password)
             .then((usuarioEncontrado) => {
-                res.status(200).json({
-                    usuario: usuarioEncontrado,
-                    token: jwt.sign({
-                        usuario: usuarioEncontrado
-                    }, variables.Securty.secretKey)
-                })
+                if (usuarioEncontrado) {
+                    res.status(200).json({
+                        usuario: usuarioEncontrado,
+                        token: jwt.sign({
+                            usuario: usuarioEncontrado
+                        }, variables.Securty.secretKey)
+                    })
+                }else {
+                    res.status(400).json({
+                        message: "Não foi possivel efetuar o login"
+                    })
+                }
             })
             .catch((err) => {
                 res.status(404).json({
