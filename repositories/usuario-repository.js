@@ -111,18 +111,12 @@ module.exports.put = (id, data) => {
         _validador.isRequired(data.password, "Senha é requerido!");
 
         // Verifica se é uma nova senha, caso seja, é feito o hash
-        connection.query(Query.findById("usuario", id, "id, nome, email"), (err, result) => {
+        connection.query(Query.findById("usuario", id, "id, nome, email, password"), (err, result) => {
             if (result && result.length == 1) {
 
                 if (result[0].password !== data.password) {
                     data.password = md5(data.password)
                 }
-            } else {
-                console.log(err)
-                reject({
-                    message: "Ocorreu um erro inesperado!",
-                    status: 503
-                })
             }
         });
 
@@ -131,10 +125,17 @@ module.exports.put = (id, data) => {
             connection.query(Query.findByIdAndUpdate("usuario", id, data), (err, result) => {
 
                 if (result) {
-                    resolve({
-                        message: "Atualizado com sucesso!",
-                        status: 202
-                    })
+                    if(result.affectedRows === 1){
+                        resolve({
+                            message: "Atualizado com sucesso!",
+                            status: 202
+                        })
+                    } else {
+                        reject({
+                            message: "Usuário não encontrado",
+                            status: 404
+                        })
+                    }
                 } else {
                     console.log(err)
                     reject({

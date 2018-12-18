@@ -62,10 +62,17 @@ module.exports.put = (id, data) => {
         if (_validador.erros.length === 0) {
             connection.query(Query.findByIdAndUpdate("tarefas", id, data), (err, result) => {
                 if (result) {
-                    resolve({
-                        message: "Tarefa atualizada com sucesso",
-                        status: 201
-                    })
+                    if(result.affectedRows === 1){
+                        resolve({
+                            message: "Tarefa atualizada com sucesso!",
+                            status: 202
+                        })
+                    } else {
+                        reject({
+                            message: "Tarefa não encontrada",
+                            status: 404
+                        })
+                    }
                 } else {
                     reject({
                         message: "Ocorreu um erro inesperado!",
@@ -88,10 +95,17 @@ module.exports.alteraStatus = (id, data) => {
         if (data.concluida === 1 || data.concluida === 0) {
             connection.query(Query.findByIdAndUpdate("tarefas", id, data), (err, result) => {
                 if (result) {
-                    resolve({
-                        message: "Status da tarefa atualizado com sucesso",
-                        status: 201
-                    })
+                    if(result.affectedRows === 1){
+                        resolve({
+                            message: "Status da tarefa atualizado com sucesso!",
+                            status: 202
+                        })
+                    } else {
+                        reject({
+                            message: "Tarefa não encontrada",
+                            status: 404
+                        })
+                    }
                 } else {
                     console.log(err)
                     reject({
