@@ -3,6 +3,7 @@
 const connection = require("../bin/config/db-connection")();
 const validation = require("../bin/helpers/validation");
 const Query = require("../bin/helpers/query");
+const _repository_base = require("../bin/base/repository-base");
 const Promise = require("promise");
 const md5 = require("md5");
 
@@ -89,54 +90,14 @@ module.exports.register = (data) => {
         }
     })
 }
-
-
 // retorna todos os usuários no banco
-module.exports.getAll = () => {
-    return new Promise((resolve, reject) => {
-        connection.query(Query.find("usuario", "id, nome, email"), (err, result) => {
-            if (result) {
-                resolve({
-                    message: result,
-                    status: 200
-                })
-            } else {
-                console.log(err)
-                reject({
-                    message: "Ocorreu um erro inesperado!",
-                    status: 503
-                })
-            }
-        })
-    })
+module.exports.getAll = () =>{
+    return _repository_base.getAll("usuario","id, nome, email");
 }
 
 // Obtem um usuário pelo id
-module.exports.getById = (id) => {
-    return new Promise((resolve, reject) => {
-        connection.query(Query.findById("usuario", id, "id, nome, email"), (err, result) => {
-            if (result) {
-                if (result.length <= 0) {
-                    reject({
-                        message: "Nenhum usuário encontrado!",
-                        status: 404
-                    })
-                } else {
-                    resolve({
-                        message: result,
-                        status: 200
-                    })
-                }
-
-            } else {
-                console.log(err)
-                reject({
-                    message: "Ocorreu um erro inesperado!",
-                    status: 503
-                })
-            }
-        })
-    })
+module.exports.getById = (id) =>{
+   return  _repository_base.getById("usuario", id, "id, nome, email")
 }
 
 // Atualiza o nome e a senha do usuário
