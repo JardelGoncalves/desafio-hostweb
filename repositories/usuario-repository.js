@@ -97,7 +97,7 @@ module.exports.getAll = () =>{
 
 // Obtem um usuário pelo id
 module.exports.getById = (id) =>{
-   return  _repository_base.getById("usuario", id, "id, nome, email")
+   return  _repository_base.getById("usuario", id, "Nenhum usuário encontrado!" ,"id, nome, email")
 }
 
 // Atualiza o nome e a senha do usuário
@@ -158,20 +158,5 @@ module.exports.put = (id, data) => {
 
 // Remove um usuário pelo ID
 module.exports.delete = (id) => {
-    return new Promise((resolve, reject) => {
-        connection.query(Query.findByIdAndRemove("usuario", id), (err, result) => {
-            if (result) {
-                resolve({
-                    message: "Usuário removido com sucesso!",
-                    status: 202
-                })
-            } else {
-                console.log(err)
-                reject({
-                    message: "Ocorreu um erro inesperado!",
-                    status: 503
-                })
-            }
-        })
-    })
+    return _repository_base.delete("usuario", id, "Usuário removido com sucesso!", "Usuário não encontrado!")
 }
