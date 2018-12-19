@@ -21,13 +21,13 @@ Para criar um usuário precisamos enviar um objeto JSON com os seguintes campos:
 Na figura abaixo podemos observar o cadastro de um usário utilizando o software Postman:
 
 <p align="center">
-  <img width="200" src="IMG_README/registrar.png">
+  <img width="800" src="IMG_README/registrar.png">
 </p>
 
 Após cadastrar um usuário no servidor, podemos autenticá-lo para obter o token, como ilustrado na figura abaixo:
 
 <p align="center">
-  <img width="200" src="IMG_README/autenticar.png">
+  <img width="800" src="IMG_README/autenticar.png">
 </p>
 
 **OBS: É aconselhado copiar o token para utilizar nas proximas consultas e para executar os testes unitários**
@@ -35,21 +35,21 @@ Após cadastrar um usuário no servidor, podemos autenticá-lo para obter o toke
 Para enviar o Token ao servidor, é necessário informar no cabeçalho da requisição uma chave `x-access-token` atribuindo o token a mesma, como podemos observar na figura a seguir:
 
 <p align="center">
-  <img width="200" src="IMG_README/configurar_req.png">
+  <img width="800" src="IMG_README/configurar_req.png">
 </p>
 
 Feito a configuração no cabeçalho, podemos realizar requisições aos recursos que necessita de autenticação, na figura abaixo é realizado um  POST (Adicionar tarefa) ao endpoint /tarefa informando no corpo da mensagem um objeto JSON. 
 
 <p align="center">
-  <img width="200" src="IMG_README/submit_tarefa.png">
+  <img width="800" src="IMG_README/submit_tarefa.png">
 </p>
 
 Não é informado o atributo `concluida`, pois tem o valor `0` (false) como default no banco de dados.
 
-Para executar os testes unitários, é necessário editar no arquivo `test/test.js` informando a variável `test_token` (linha 7) o valor de um token válido, caso não seja informado alguns testes que necessita de um token válido falhará. A figura a seguir apresenta a variável e como deve ser inserido o token (entre ás aspas).
+Para executar os testes unitários, é necessário editar no arquivo `test/test.js` informando a variável `token_test` (linha 7) o valor de um token válido, caso não seja informado alguns testes que necessita de um token válido falhará. A figura a seguir apresenta a variável e como deve ser inserido o token (entre ás aspas).
 
 <p align="center">
-  <img width="200" src="IMG_README/token_informado.png">
+  <img width="800" src="IMG_README/token_informado.png">
 </p>
 
 Vale ressaltar que não há a necessidade de parar a execução da aplicação pois no arquivo `docker-compose.yml` o volume é mapeado para o contêiner, ou seja, qualquer mudança no arquivo na máquina é refletida no cotêiner.
@@ -62,5 +62,5 @@ docker exec NAME/ID-do-conteiner-app npm test
 A figura abaixo apresenta o resultado do comando para rodar os testes.
 
 <p align="center">
-  <img width="200" src="IMG_README/test.png">
+  <img width="800" src="IMG_README/test.png">
 </p>
