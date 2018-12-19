@@ -60,11 +60,7 @@ module.exports.findOne = (table, data, operator, projection) =>{
 
 // método usado para retorna o tamanho de um objeto
 function getTamanho(obj) {
-    let tamanho = 0
-    for (let properties in obj) {
-        tamanho += 1
-    }
-    return tamanho
+    return Object.keys(obj).length
 }
 
 // método usado para concatenar os dados passado como objeto
