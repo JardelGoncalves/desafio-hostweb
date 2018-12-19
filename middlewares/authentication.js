@@ -18,7 +18,7 @@ module.exports = (req, res, next) => {
                 try {
                     let decoded = jwt.verify(token, variables.Securty.secretKey)
                     connection.query(Query.findOne("usuario", decoded.usuario[0],"AND"), (err, result)=>{
-                        if(result){
+                        if(result.length === 1){
                             resolve(decoded)
                         } else {
                             console.log(err)
