@@ -94,7 +94,6 @@ module.exports.put = (_validador, id, data, table) => {
         if (_validador.erros.length === 0) {
             
             if(Object.keys(data).length !== 0 && data.constructor === Object){
-                console.log("o que é isso", data === true, data)
                 connection.query(Query.findByIdAndUpdate(table, id, data), (err, result) => {
 
                     if (result) {
