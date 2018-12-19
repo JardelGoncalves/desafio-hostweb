@@ -104,23 +104,20 @@ module.exports.put = (id, data) => {
 
         let _validador = new validation();
 
-        // Validações (só atualizará apenas essas informações)
-        _validador.isRequired(data.nome, "Nome é requerido!");
-        _validador.isRequired(data.password, "Senha é requerido!");
-
         // Verifica se é uma nova senha, caso seja, é feito o hash
         connection.query(Query.findById("usuario", id, "id, nome, email, password"), (err, result) => {
             if (result && result.length == 1) {
-
+                let newData = {}
                 if (data.password && (result[0].password !== data.password)) {
-                    data.password = md5(data.password)
+                    newData.password = md5(data.password)
+                }
+
+                if (data.nome) {
+                    newData.nome = data.nome
                 }
 
                 // caso não falhe em nenhum validation, atualiza as informações
-                _repository_base.put(_validador, id, {
-                        nome: data.nome,
-                        password: data.password
-                    }, "usuario")
+                _repository_base.put(_validador, id, newData, "usuario")
                     .then((success) => {
                         resolve(success)
                     })
@@ -128,7 +125,10 @@ module.exports.put = (id, data) => {
                         reject(failed)
                     })
             } else {
-                reject({message:"Ocorreu um erro inesperado"})
+                reject({
+                    status:404,
+                    message: "Usuário não encontrado"
+                })
             }
         });
     })
