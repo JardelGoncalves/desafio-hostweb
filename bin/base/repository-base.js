@@ -35,7 +35,7 @@ module.exports.getById = (table, id, projection) => {
             if (result) {
                 if (result.length <= 0) {
                     reject({
-                        message: table + " não encontrado!",
+                        message: "Não encontrado!",
                         status: 404
                     })
                 } else {
