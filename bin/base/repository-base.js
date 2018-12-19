@@ -92,29 +92,39 @@ module.exports.put = (_validador, id, data, table) => {
     return new Promise((resolve, reject) => {
 
         if (_validador.erros.length === 0) {
-            connection.query(Query.findByIdAndUpdate(table, id, data), (err, result) => {
+            
+            if(Object.keys(data).length !== 0 && data.constructor === Object){
+                console.log("o que é isso", data === true, data)
+                connection.query(Query.findByIdAndUpdate(table, id, data), (err, result) => {
 
-                if (result) {
-                    if (result.affectedRows === 1) {
-                        resolve({
-                            message: "Atualizado com sucesso!",
-                            status: 202
-                        })
+                    if (result) {
+                        if (result.affectedRows === 1) {
+                            resolve({
+                                message: "Atualizado com sucesso!",
+                                status: 201
+                            })
+                        } else {
+                            reject({
+                                message: "Usuário não encontrado",
+                                status: 404
+                            })
+                        }
                     } else {
+                        console.log(err)
                         reject({
-                            message: "Usuário não encontrado",
-                            status: 404
+                            message: "Ocorreu um erro inesperado!",
+                            status: 503
                         })
                     }
-                } else {
-                    console.log(err)
-                    reject({
-                        message: "Ocorreu um erro inesperado!",
-                        status: 503
-                    })
-                }
 
-            })
+                })
+            } else {
+                reject({
+                    message:"Nenhuma informação alterada",
+                    erros:["Nenhum valor informado"],
+                    status:400
+                })
+            }
         } else {
             reject({
                 message: "Não foi possivel atualzar seus dados!",
