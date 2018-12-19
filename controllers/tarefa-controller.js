@@ -56,20 +56,6 @@ module.exports.put = (req, res) => {
         })
 }
 
-module.exports.alterarStatus = (req, res) => {
-    _repository.alteraStatus(req.params.id, {concluida: req.body.concluida})
-        .then((success) => {
-            res.status(success.status).json({
-                message: success.message
-            })
-        })
-        .catch((failed) => {
-            res.status(failed.status).json({
-                message: failed.message,
-                erros: failed.erros
-            })
-        })
-}
 
 module.exports.delete = (req, res)=>{
     _repository.delete(req.params.id)
