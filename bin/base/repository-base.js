@@ -101,7 +101,7 @@ module.exports.put = (_validador, id, data, table) => {
                         if (result.affectedRows === 1) {
                             resolve({
                                 message: "Atualizado com sucesso!",
-                                status: 201
+                                status: 202
                             })
                         } else {
                             reject({
