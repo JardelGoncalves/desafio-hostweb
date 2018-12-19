@@ -592,7 +592,7 @@ if(token_test){
                     });
             });
 
-            it('Atualizando tarefa)', (done) => {
+            it('Atualizando tarefa', (done) => {
                 chai.request('http://localhost:3000')
                     .put('/tarefa/'+id)
                     .send({
@@ -606,7 +606,7 @@ if(token_test){
                     });
             });
 
-            it('Tarefa não encotrada)', (done) => {
+            it('Tarefa não encotrada', (done) => {
                 chai.request('http://localhost:3000')
                     .put('/tarefa/100')
                     .send({
@@ -642,7 +642,7 @@ if(token_test){
                         done();
                     });
             });
-            it('Removendo tarefa)', (done) => {
+            it('Removendo tarefa', (done) => {
                 chai.request('http://localhost:3000')
                     .del('/tarefa/'+id)
                     .set("x-access-token", token_test)
@@ -652,7 +652,7 @@ if(token_test){
                         done();
                     });
             });
-            it('Tarefa não encotrada)', (done) => {
+            it('Tarefa não encotrada', (done) => {
                 chai.request('http://localhost:3000')
                     .del('/tarefa/100')
                     .set("x-access-token", token_test)
