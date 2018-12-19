@@ -39,65 +39,63 @@ module.exports.register = (data) => {
         _validador.isRequired(data.nome, "Nome é requerido!");
         _validador.isRequired(data.email, "Email é requerido!");
         _validador.isRequired(data.password, "Senha é requerido!");
+        _validador.isRequired(data.passwordConfirm, "Confirmação de senha é requerido!");
+        _validador.isEqual((data.password && data.password === data.passwordConfirm), "Senha e Confirmação da senha não equivalentes ou não definidas!")
         _validador.isEmail(data.email, "Email inválido!");
 
-        // verifica se não houve erro
-        if (_validador.erros.length === 0) {
-            // faz o hash da senha (password)
-            data.password = md5(data.password);
-            // consulta no banco se há usuários com o email informado na requisição
-            connection.query(Query.findByEmail("usuario", data.email), (err, result) => {
-                if (result) {
-                    // se não há usuario com aquele email, insere no banco
-                    if (result.length == 0) {
-                        // Query é um modulo criado para facilitar as consultas no db
-                        connection.query(Query.save(data, "usuario"), (err, result) => {
-                            if (result) {
-                                resolve({
-                                    message: "Usuário cadastrado com sucesso",
-                                    status: 201
-                                })
-                            } else {
-                                console.log(err)
-                                reject({
-                                    message: "Ocorreu um erro inesperado!",
-                                    status: 503
-                                })
-                            }
-                        })
-                    } else {
-                        reject({
-                            message: "Não foi possivel realizar o cadastro",
-                            erros: ["Email já em uso!"],
-                            status: 400
-                        })
+        // consulta no banco se há usuários com o email informado na requisição
+        connection.query(Query.findByEmail("usuario", data.email), (err, result) => {
+            if (result) {
+                // se não há usuario com aquele email, insere no banco
+                if (result.length == 0) {
+                    //verifica se a senha veio no corpo
+                    if (data.password) {
+                        // faz o hash da senha
+                        data.password = md5(data.password);
                     }
+                    // um novo objeto para enviar para o servidor
+                    let user = {
+                        nome: data.nome,
+                        email: data.email,
+                        password: data.password
+                    }
+
+                    // enviado para o repository-base (métodos padrões)
+                    _repository_base.post(_validador, user, "usuario")
+                        .then((success) => {
+                            resolve(success)
+                        })
+                        .catch((failed) => {
+                            reject(failed)
+                        })
+
                 } else {
-                    console.log(err)
                     reject({
-                        message: "Ocorreu um erro inesperado!",
-                        status: 503
+                        message: "Não foi possivel realizar o cadastro",
+                        erros: ["Email já em uso!"],
+                        status: 400
                     })
                 }
-            })
-
-        } else {
-            reject({
-                message: "Não foi possivel realizar o cadastro",
-                erros: _validador.erros,
-                status: 400
-            })
-        }
+            } else {
+                console.log(err)
+                reject({
+                    message: "Ocorreu um erro inesperado!",
+                    status: 503
+                })
+            }
+        })
     })
 }
+
+
 // retorna todos os usuários no banco
-module.exports.getAll = () =>{
-    return _repository_base.getAll("usuario","id, nome, email");
+module.exports.getAll = () => {
+    return _repository_base.getAll("usuario", "id, nome, email");
 }
 
 // Obtem um usuário pelo id
-module.exports.getById = (id) =>{
-   return  _repository_base.getById("usuario", id, "Nenhum usuário encontrado!" ,"id, nome, email")
+module.exports.getById = (id) => {
+    return _repository_base.getById("usuario", id)
 }
 
 // Atualiza o nome e a senha do usuário
@@ -114,50 +112,30 @@ module.exports.put = (id, data) => {
         connection.query(Query.findById("usuario", id, "id, nome, email, password"), (err, result) => {
             if (result && result.length == 1) {
 
-                if (result[0].password !== data.password) {
+                if (data.password && (result[0].password !== data.password)) {
                     data.password = md5(data.password)
                 }
+
+                // caso não falhe em nenhum validation, atualiza as informações
+                _repository_base.put(_validador, id, {
+                        nome: data.nome,
+                        password: data.password
+                    }, "usuario")
+                    .then((success) => {
+                        resolve(success)
+                    })
+                    .catch((failed) => {
+                        reject(failed)
+                    })
+            } else {
+                reject({message:"Ocorreu um erro inesperado"})
             }
         });
-
-        // caso não falhe em nenhum validation, atualiza as informações
-        if (_validador.erros.length === 0) {
-            connection.query(Query.findByIdAndUpdate("usuario", id, data), (err, result) => {
-
-                if (result) {
-                    if(result.affectedRows === 1){
-                        resolve({
-                            message: "Atualizado com sucesso!",
-                            status: 202
-                        })
-                    } else {
-                        reject({
-                            message: "Usuário não encontrado",
-                            status: 404
-                        })
-                    }
-                } else {
-                    console.log(err)
-                    reject({
-                        message: "Ocorreu um erro inesperado!",
-                        status: 503
-                    })
-                }
-
-            })
-        } else {
-            reject({
-                message: "Não foi possivel atualzar seus dados!",
-                erros: _validador.erros,
-                status: 400
-            })
-        }
-
     })
 
 }
 
 // Remove um usuário pelo ID
 module.exports.delete = (id) => {
-    return _repository_base.delete("usuario", id, "Usuário removido com sucesso!", "Usuário não encontrado!")
+    return _repository_base.delete("usuario", id)
 }

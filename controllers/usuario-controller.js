@@ -38,13 +38,7 @@ module.exports.authenticate = (req, res) => {
 
 // Cadastro de usuário
 module.exports.register = (req, res) => {
-    if (req.body.password && req.body.passwordConfirm) {
-        if (req.body.password === req.body.passwordConfirm) {
-            _repository.register({
-                    nome: req.body.nome,
-                    email: req.body.email,
-                    password: req.body.password
-                })
+            _repository.register(req.body)
                 .then((success) => {
                     res.status(success.status).json({
                         message: success.message
@@ -56,18 +50,6 @@ module.exports.register = (req, res) => {
                         erros: failed.erros
                     })
                 })
-        } else {
-            res.status(400).json({
-                message: "Não foi possivel realizar o cadastro",
-                erros: ["Senha e Confirmação da senha não equivalentes!"]
-            })
-        }
-    } else {
-        res.status(400).json({
-            message: "Não foi possivel realizar o cadastro",
-            erros: ["Senha e Confirmação da senha são requeridas!"]
-        })
-    }
 }
 
 // Listar todos os usuários
