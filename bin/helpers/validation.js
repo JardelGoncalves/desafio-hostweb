@@ -30,6 +30,12 @@ class Validation {
         }
     }
 
+    isEqual(expression, message){
+        if(!expression){
+            this.erros.push(message)
+        }
+    }
+
 
     dateValid(date, message) {
         if(date){
