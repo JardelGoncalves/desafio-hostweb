@@ -1,7 +1,6 @@
 const Query = require("../helpers/query");
 const connection = require("../config/db-connection")();
 const Promise = require("promise");
-const md5 = require("md5");
 
 /**
  * Este modúlo possui os métodos repetidos dos repositories
