@@ -15,7 +15,7 @@ Para criar um usuário precisamos enviar um objeto JSON para o endpoint `/usuari
     "nome":"nome do usuário",
     "email":"email do usuário",
     "password":"senha do usuário",
-    "passwrodConfirm":"confirmação da senha"
+    "passwordConfirm":"confirmação da senha"
 }
 ```
 Na figura abaixo podemos observar o cadastro de um usário utilizando o software Postman:
