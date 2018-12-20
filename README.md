@@ -7,9 +7,9 @@ docker-compose up
 ```
 Após finalizar o build, o APP subirá automaticamente. O contêiner com a imagem do mysql pode demorar um pouco pois além de subir o banco de dados ele executa o .sql para criar o banco e as tabelas, caso seja executado alguma requisão antes do banco ser criado, uma resposta com o código 503 é retornado.
 
-Após o App e o banco de dados subir, para fazer requisições para os endpoints /tarefa (GET, POST, PUT e DELETE) ou /usuario (GET, DELETE e PUT) é necessário enviar um token no cabeçalho da requisição. Para obter o Token é necessário se autenticar no servidor, como não há usuário no servidor vamos cadastrar um:
+Após o App e o banco de dados subir, para fazer requisições para os endpoints `/tarefa` (GET, POST, PUT e DELETE) ou `/usuario` (GET, DELETE e PUT) é necessário enviar um token no cabeçalho da requisição. Para obter o Token é necessário se autenticar no servidor, como não há usuário no servidor vamos cadastrar um:
 
-Para criar um usuário precisamos enviar um objeto JSON com os seguintes campos:
+Para criar um usuário precisamos enviar um objeto JSON para o endpoint `/usuario/register` com os seguintes campos:
 ```
 {
     "nome":"nome do usuário",
@@ -24,7 +24,7 @@ Na figura abaixo podemos observar o cadastro de um usário utilizando o software
   <img width="800" src="IMG_README/registrar.png">
 </p>
 
-Após cadastrar um usuário no servidor, podemos autenticá-lo para obter o token, como ilustrado na figura abaixo:
+Após cadastrar um usuário no servidor, podemos autenticá-lo (endpoint `/usuario/auth`) para obter o token, como ilustrado na figura abaixo:
 
 <p align="center">
   <img width="800" src="IMG_README/autenticar.png">
